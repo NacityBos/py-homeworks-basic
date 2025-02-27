@@ -1,0 +1,69 @@
+# Задача 1
+
+import os.path
+
+file_path = os.path.join(os.getcwd(), 'recipes.txt')
+cook_book = {}
+
+with open('recipes.txt', encoding='utf-8') as f:
+    for line in f:
+        dish = line.strip()
+        sum_ingredients = int(f.readline().strip())
+        ingredients = []
+        for line in range(sum_ingredients):
+            ingredient_name, quantity, measure = f.readline().strip().split('|')
+            ingredients.append({'ingredient_name': ingredient_name,\
+                                    'quantity': int(quantity), 'measure': measure})
+        f.readline()
+        cook_book[dish] = ingredients
+print(cook_book)
+
+
+# Задача 2
+
+def get_shop_list_by_dishes(dishes,person_count):
+    shop_list = {}
+
+    for dish in dishes:
+        if dish in cook_book:
+            for ingredient in cook_book[dish]:
+                ingredient['quantity'] *= person_count
+                shop_list.setdefault(ingredient['ingredient_name'], {})
+                shop_list[ingredient['ingredient_name']].setdefault(ingredient['measure'],\
+                ingredient['quantity'])
+
+        else:
+            print(f'Блюда {dish} нет в книге рецептов')
+    return shop_list
+
+print(get_shop_list_by_dishes(['Запеченный картофель', 'Омлет'], 2))
+
+
+# Задача 3
+
+files_info = []
+with open('1.txt', encoding='utf-8') as f1, open('2.txt', encoding='utf-8') \
+        as f2, open('3.txt', encoding='utf-8') as f3:
+
+    lines_1 = f1.read().splitlines()
+    a = len(lines_1)
+    t1 = (a,'1.txt', lines_1)
+    files_info.append(t1)
+    lines_2 = f2.read().splitlines()
+    b = len(lines_2)
+    t2 = (b,'2.txt', lines_2)
+    files_info.append(t2)
+    lines_3 = f3.read().splitlines()
+    c = len(lines_3)
+    t3 = (c,'3.txt', lines_3)
+files_info.append(t3)
+files_info.sort()
+
+print(files_info)
+
+
+with open('4.txt', 'w', encoding='utf-8') as f:
+    for file_info in files_info:
+        f.write(file_info[1] + '\n')
+        f.write(str(file_info[0]) + '\n')
+        print('\n'.join(map(str, file_info[2:])), file=f)
